@@ -19,7 +19,6 @@ import { DatabaseModule } from './database/database.module';
     }),
     ComponentsModule,
     DatabaseModule
-
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
