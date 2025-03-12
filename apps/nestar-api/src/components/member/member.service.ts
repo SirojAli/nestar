@@ -8,39 +8,38 @@ import { Message } from '../../libs/enums/common.enum';
 
 @Injectable()
 export class MemberService {
-  constructor(@InjectModel('Member') private readonly memberModule: Model<Member>) {}
+  constructor(@InjectModel('Member') private readonly memberModel: Model<Member>) {}
 
   public async signup(input: MemberInput): Promise<Member> {
     // TODO: Hash Password
     try {
-      const result = await this.memberModule.create(input)
+      const result = await this.memberModel.create(input)
     // TODO: Auth via Token
       return  result;
     } catch(err) {
       console.log("Error, Service.model:", err)
       throw new BadRequestException(err)
     }
-
   }
 
   public async login(input: LoginInput): Promise<Member> {
     const {memberNick, memberPassword} = input;
-    const response: Member = await this.memberModule
-    .findOne({memberNick: memberNick })
-    .select('+memberPassword')
-    .exec();
+    const response: Member = await this.memberModel
+      .findOne({memberNick: memberNick})
+      .select('+memberPassword')
+      .exec();
 
     if(!response || response.memberStatus === MemberStatus.DELETE) {
       throw new InternalServerErrorException(Message.NO_MEMBER_NICK);
     } else if(response.memberStatus === MemberStatus.BLOCK) {
       throw new InternalServerErrorException(Message.BLOCKED_USER);
 
-      // TODO: Compare passwords
-      console.log('response:', response);
-      const isMatch = memberPassword === response.memberPassword;
-      if(!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD) 
+    // TODO: Compare passwords
+    console.log('response:', response);
+    const isMatch = memberPassword === response.memberPassword;
+    if(!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD) 
     return  response;
-  }
+    }
 }
 
   public async updateMember(): Promise<string> {
