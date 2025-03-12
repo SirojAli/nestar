@@ -44,6 +44,4 @@ export class MemberResolver {
     console.log('Query: getMember')
     return this.memberService.getMember();
   }
-
-
 }

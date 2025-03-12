@@ -25,22 +25,21 @@ export class MemberService {
   public async login(input: LoginInput): Promise<Member> {
     const {memberNick, memberPassword} = input;
     const response: Member = await this.memberModel
-      .findOne({memberNick: memberNick})
+      .findOne({ memberNick: memberNick})
       .select('+memberPassword')
-      .exec();
+      .exec() as Member;
 
-    if(!response || response.memberStatus === MemberStatus.DELETE) {
+    if (!response || response.memberStatus === MemberStatus.DELETE) {
       throw new InternalServerErrorException(Message.NO_MEMBER_NICK);
-    } else if(response.memberStatus === MemberStatus.BLOCK) {
+    } else if (response.memberStatus === MemberStatus.BLOCK) {
       throw new InternalServerErrorException(Message.BLOCKED_USER);
+    }
 
     // TODO: Compare passwords
-    console.log('response:', response);
     const isMatch = memberPassword === response.memberPassword;
-    if(!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD) 
-    return  response;
-    }
-}
+    if (!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD);
+    return response;
+  }
 
   public async updateMember(): Promise<string> {
     return  'updateMember executed!';
