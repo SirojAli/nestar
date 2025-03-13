@@ -24,10 +24,11 @@ export class MemberService {
 
   public async login(input: LoginInput): Promise<Member> {
     const {memberNick, memberPassword} = input;
+      // @ts-ignore
     const response: Member = await this.memberModel
       .findOne({ memberNick: memberNick})
       .select('+memberPassword')
-      .exec() as Member;
+      .exec();
 
     if (!response || response.memberStatus === MemberStatus.DELETE) {
       throw new InternalServerErrorException(Message.NO_MEMBER_NICK);
