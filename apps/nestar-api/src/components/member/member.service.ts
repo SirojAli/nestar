@@ -61,13 +61,15 @@ export class MemberService {
         {
           _id: memberId,
           memberStatus: MemberStatus.ACTIVE,
-        },
-        input,
-        {new: true},
+        },  // FILTER
+        input,  // UPDATE
+        {new: true},  // OPTION
       )
       .exec();
     if (!result) throw new InternalServerErrorException(Message.UPLOAD_FAILED);
 
+    // MemberData ni => Token qiberyapti
+    // Bu Login bb kirgandan kn, update->image qilishi uchun shu token bn oberishi muhim
     result.accessToken = await this.authService.createToken(result);
     return  result;
   }
@@ -100,13 +102,14 @@ export class MemberService {
   public async getAgents(memberId: ObjectId, input: AgentsInquiry): Promise<Members> {
     const { text } = input.search;
     const match: T = { memberType: MemberType.AGENT, memberStatus: MemberStatus.ACTIVE };
-    const sort: T = {[input?.sort ?? "createdAt"]: input?.direction ?? Direction.DESC};
+    const sort: T = {[input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC};
+    // const sort: T = { createdAt: -1 }
 
     if (text) match.memberNick = { $regex: new RegExp(text, 'i')};
     console.log('match:',match);
 
     const result = await this.memberModel
-      .aggregate([
+      .aggregate([  // 1ta array = bu pipeline deyiladi
         {$match: match},
         {$sort: sort}, 
         {
@@ -155,6 +158,4 @@ export class MemberService {
     
     return  result;
   }
-
-
 }

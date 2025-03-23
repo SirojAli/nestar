@@ -79,7 +79,6 @@ export class MemberResolver {
     Promise<Members> {
     console.log('Query: getAgents');
     return await this.memberService.getAgents(memberId, input);
-    
   }
 
   /** ADMIN   ||  Authorization **/    

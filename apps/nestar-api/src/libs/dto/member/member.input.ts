@@ -1,7 +1,7 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 import {IsIn, IsNotEmpty, IsOptional, Length, Min} from "class-validator";
 import { MemberType, MemberAuthType, MemberStatus } from "../../enums/member.enum";
-import { availableAgentSorts, availableMemberSort } from "../../config";
+import { availableAgentSorts, availableMemberSorts } from "../../config";
 import { Direction } from "../../enums/common.enum";
 
 @InputType() 
@@ -104,7 +104,7 @@ export class MembersInquiry {
   limit: number;
 
   @IsOptional()
-  @IsIn([availableMemberSort])
+  @IsIn([availableMemberSorts])
   @Field(() => String, {nullable: true})
   sort?: string;
 
