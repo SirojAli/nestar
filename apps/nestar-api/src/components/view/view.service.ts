@@ -5,7 +5,6 @@ import { View } from '../../libs/dto/view/view';
 import { ViewInput } from '../../libs/dto/view/view.input';
 import { T } from '../../libs/types/common';
 
-
 @Injectable()
 export class ViewService {
   constructor(@InjectModel('View') private readonly viewModel: Model<View>) {} 
