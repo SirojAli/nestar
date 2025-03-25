@@ -79,8 +79,8 @@ export class MemberResolver {
   @Query(() => Members)
   public async getAgents(
     @Args('input') input: AgentsInquiry, 
-    @AuthMember('_id') memberId: ObjectId): 
-    Promise<Members> {
+    @AuthMember('_id') memberId: ObjectId
+    ):Promise<Members> {
     console.log('Query: getAgents');
     return await this.memberService.getAgents(memberId, input);
   }

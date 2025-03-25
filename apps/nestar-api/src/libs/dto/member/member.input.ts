@@ -44,6 +44,7 @@ export class LoginInput {
 
 @InputType() 
 class AISearch {  // AI -> Agents Inquiry
+  // @IsNotEmpty()
   @IsOptional()
   @Field(() => String, {nullable: true})
   text?: string;
