@@ -16,7 +16,7 @@ export class PropertyService {
   public async createProperty(input: PropertyInput): Promise<Property> {
     try {
       const result = await this.propertyModel.create(input);
-      await this.memberService.memberStatsEditor({
+      await this.memberService.memberStatsEditor({  // Member data's manipulation-logic
         _id: result.memberId,
         targetKey: 'memberProperties',
         modifier: 1,

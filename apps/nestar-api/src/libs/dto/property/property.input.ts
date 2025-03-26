@@ -24,11 +24,11 @@ export class PropertyInput {
  propertyTitle: string;
 
  @IsNotEmpty()
- @Field(() => Int)
- propertyPrice: string;
+ @Field(() => Number)
+ propertyPrice: number;
 
  @IsNotEmpty()
- @Field(() => Int)
+ @Field(() => Number)
  propertySquare: number;
 
  @IsNotEmpty()
@@ -65,7 +65,6 @@ export class PropertyInput {
  @IsOptional()
  @Field(() => Date, {nullable: true})
  constructedAt?: Date;
-
-
+ 
 }
 

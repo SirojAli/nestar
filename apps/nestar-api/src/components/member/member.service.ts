@@ -168,7 +168,7 @@ export class MemberService {
         _id, 
         {$inc: {[targetKey]: modifier}},
         { new: true},
-        )
+      )
         .exec();
   }
 }
