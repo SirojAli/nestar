@@ -128,7 +128,6 @@ export class MemberResolver {
        .on('error', () => reject(false));
    });
    if (!result) throw new Error(Message.UPLOAD_FAILED);
-   
    return url;
    }
    
