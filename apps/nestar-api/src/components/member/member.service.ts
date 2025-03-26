@@ -91,7 +91,7 @@ export class MemberService {
       const newView = await this.viewService.recordView(viewInput);
       if (newView) {
         await this.memberModel.findOneAndUpdate(search, {$inc: {memberViews: 1}}, {new: true}).exec();
-        targetMember.memberViews++;
+        targetMember.memberViews++ ;
       }
 
       // meLiked
