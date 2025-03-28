@@ -41,8 +41,7 @@ export class PropertyService {
   public async getProperty(memberId: ObjectId, propertyId: ObjectId): Promise<Property> {
     const search: T = {
       _id: propertyId,
-      propertyStatus: PropertyStatus.ACTIVE,
-    };
+      propertyStatus: PropertyStatus.ACTIVE };
 
     const targetProperty: Property = await this.propertyModel.findOne(search).lean().exec();
     if (!targetProperty) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
@@ -54,7 +53,6 @@ export class PropertyService {
         await this.propertyStatsEditor({ _id: propertyId, targetKey: 'propertyViews', modifier: 1 });
         targetProperty.propertyViews++ ;
       }
-
       // meLiked
     }
 
@@ -66,7 +64,7 @@ export class PropertyService {
       console.log('executed');
       const { _id, targetKey, modifier } = input;
       return await this.propertyModel
-        .findOneAndUpdate(
+        .findByIdAndUpdate(
           _id, 
           {$inc: {[targetKey]: modifier}},
           { new: true},
