@@ -9,7 +9,7 @@ import { MemberType } from '../../libs/enums/member.enum';
 import { AuthMember } from '../auth/decorators/authMember.decorator';
 import { ObjectId } from 'mongoose';
 import { WithoutGuard } from '../auth/guards/without.guard';
-import { shapeIntoMongoObject } from '../../libs/config';
+import { shapeIntoMongoObjectId } from '../../libs/config';
 import { PropertyUpdate } from '../../libs/dto/property/property.update';
 
 @Resolver()
@@ -35,7 +35,7 @@ export class PropertyResolver {
       @AuthMember('_id') memberId: ObjectId
     ): Promise<Property> {  
       console.log('Query: getProperty');
-      const propertyId = shapeIntoMongoObject(input);
+      const propertyId = shapeIntoMongoObjectId(input);
       return await this.propertyService.getProperty(memberId, propertyId);
     }
 
@@ -47,7 +47,7 @@ export class PropertyResolver {
       @AuthMember('_id') memberId: ObjectId
     ): Promise<Property> { 
       console.log('Mutation: updateProperty');
-      input._id = shapeIntoMongoObject(input._id);  
+      input._id = shapeIntoMongoObjectId(input._id);  
       return await this.propertyService.updateProperty(memberId, input);
     }
 
@@ -89,7 +89,7 @@ export class PropertyResolver {
     @Mutation((returns) => Property)
     public async updatePropertyByAdmin(@Args('input') input: PropertyUpdate): Promise <Property> {
       console.log('Mutation: updatePropertyByAdmin');
-      input._id = shapeIntoMongoObject(input._id);
+      input._id = shapeIntoMongoObjectId(input._id);
       return await this.propertyService.updatePropertyByAdmin(input)
     }
 
@@ -98,7 +98,7 @@ export class PropertyResolver {
     @Mutation((returns) => Property)
     public async removePropertyByAdmin(@Args('propertyId') input: string): Promise <Property> {
       console.log('Mutation: removePropertyByAdmin');
-      const propertyId = shapeIntoMongoObject(input);
+      const propertyId = shapeIntoMongoObjectId(input);
       return await this.propertyService.removePropertyByAdmin(propertyId)
     }
 

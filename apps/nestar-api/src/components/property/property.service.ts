@@ -11,7 +11,7 @@ import { PropertyStatus } from '../../libs/enums/property.enum';
 import { ViewGroup } from '../../libs/enums/view.enum';
 import { PropertyUpdate } from '../../libs/dto/property/property.update';
 import * as moment from 'moment';
-import { lookupMember, shapeIntoMongoObject } from '../../libs/config';
+import { lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
 
 @Injectable()
 export class PropertyService {
@@ -60,18 +60,6 @@ export class PropertyService {
     return targetProperty;
   }
 
-  public async propertyStatsEditor(input: StatisticModifier): Promise<Property> {
-      console.log('executed');
-      const { _id, targetKey, modifier } = input;
-      return await this.propertyModel
-        .findByIdAndUpdate(
-          _id, 
-          {$inc: {[targetKey]: modifier}},
-          { new: true},
-        )
-          .exec();
-  }
-  
   public async updateProperty(memberId: ObjectId, input: PropertyUpdate): Promise<Property> {
     let {propertyStatus, soldAt, deletedAt } = input;
     const search: T = {
@@ -127,38 +115,6 @@ export class PropertyService {
       if(!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
       // console.log('Aggregation Output:', JSON.stringify(result, null, 2));
       return result[0];
-  }
-
-  private shapeMatchQuery(match: T, input: PropertiesInquiry): void {
-    const {
-      memberId,
-      locationList,
-      roomsList,
-      bedsList,
-      typeList,
-      periodsRange,
-      pricesRange,
-      squaresRange,
-      options,
-      text,
-    } = input.search;
-
-    if (memberId) match.memberId = shapeIntoMongoObject(memberId);
-    if (locationList) match.propertyLocation = { $in: locationList };
-    if (roomsList) match.propertyRooms = { $in: roomsList };
-    if (bedsList) match.propertyBeds = { $in: bedsList };
-    if (typeList) match.propertyType = { $in: typeList };
-
-    if (pricesRange) match.propertyPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
-    if (periodsRange) match.createdAt = { $gte: periodsRange.start, $lte: periodsRange.end };
-    if (squaresRange) match.propertySquare = { $gte: squaresRange.start, $lte: squaresRange.end };
-
-    if (text) match.propertyTitle = { $regex: new RegExp(text, 'i')};
-    if (options) {
-      match ['$or'] = options.map((ele) => {
-        return { [ele]: true };
-      });
-    }
   }
 
   public async getAgentProperties(memberId: ObjectId, input: AgentPropertiesInquiry): Promise<Properties> {
@@ -251,6 +207,51 @@ export class PropertyService {
     const result = await this.propertyModel.findOneAndDelete(search).exec();
     if (!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);
     return result;
+  }
+
+  /** Additional Logics **/
+  public async propertyStatsEditor(input: StatisticModifier): Promise<Property> {
+    console.log('executed');
+    const { _id, targetKey, modifier } = input;
+    return await this.propertyModel
+      .findByIdAndUpdate(
+        _id, 
+        {$inc: {[targetKey]: modifier}},
+        { new: true},
+      )
+        .exec();
+  }
+
+  private shapeMatchQuery(match: T, input: PropertiesInquiry): void {
+    const {
+      memberId,
+      locationList,
+      roomsList,
+      bedsList,
+      typeList,
+      periodsRange,
+      pricesRange,
+      squaresRange,
+      options,
+      text,
+    } = input.search;
+
+    if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
+    if (locationList) match.propertyLocation = { $in: locationList };
+    if (roomsList) match.propertyRooms = { $in: roomsList };
+    if (bedsList) match.propertyBeds = { $in: bedsList };
+    if (typeList) match.propertyType = { $in: typeList };
+
+    if (pricesRange) match.propertyPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
+    if (periodsRange) match.createdAt = { $gte: periodsRange.start, $lte: periodsRange.end };
+    if (squaresRange) match.propertySquare = { $gte: squaresRange.start, $lte: squaresRange.end };
+
+    if (text) match.propertyTitle = { $regex: new RegExp(text, 'i')};
+    if (options) {
+      match ['$or'] = options.map((ele) => {
+        return { [ele]: true };
+      });
+    }
   }
 
 }
