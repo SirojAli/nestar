@@ -14,6 +14,9 @@ export const availablePropertySorts = [
 /** Property related **/
 export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews']
 
+/** Property related **/
+export const availableCommentSorts = ['createdAt', 'updatedAt']
+
 
 /** IMAGE CONFIGURATION  */
  export const validMimeTypes = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -22,10 +25,12 @@ export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLik
    return uuidv4() + ext;
  };
 
+/** Make MongoDB ID  */
 export const shapeIntoMongoObjectId =(target: any) => {
   return typeof target === 'string' ? new ObjectId(target) : target;
 }
 
+/** Like Process  */
 export const lookupMember = { 
   $lookup: {
     from: 'members',
