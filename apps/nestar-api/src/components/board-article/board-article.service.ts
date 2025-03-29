@@ -9,7 +9,7 @@ import { ViewGroup } from '../../libs/enums/view.enum';
 import * as moment from 'moment';
 import { lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
 import { BoardArticle, BoardArticles } from '../../libs/dto/board-article/board-article';
-import { BoardArticleInput, BoardArticlesInquiry } from '../../libs/dto/board-article/board-article.input';
+import { AllBoardArticlesInquiry, BoardArticleInput, BoardArticlesInquiry } from '../../libs/dto/board-article/board-article.input';
 import { BoardArticleUpdate } from '../../libs/dto/board-article/board-article.update';
 import { BoardArticleStatus } from '../../libs/enums/board-article.enum';
 
@@ -114,6 +114,68 @@ export class BoardArticleService {
   }
 
 
+  //** ADMIN **//
+  public async getAllBoardArticlesByAdmin( input: AllBoardArticlesInquiry): Promise<BoardArticles> {
+    const { articleStatus, articleCategory } = input.search;
+    const match: T = {};
+    const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
+
+    if (articleStatus) match.articleStatus = articleStatus;
+    if (articleCategory) match.articleCategory = articleCategory;
+
+    const result = await this.boardArticleModel
+      .aggregate([  
+        { $match: match },
+        { $sort: sort }, 
+        {
+          $facet: {
+            list: [
+              { $skip: (input.page - 1) * input.limit }, 
+              { $limit: input.limit },    
+              lookupMember,   
+              { $unwind: '$memberData' },],  
+            metaCounter: [{ $count: 'total' }],
+          },
+        },
+      ])
+      .exec();
+    console.log('result:', result);
+    if(!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+    return result[0];
+  }
+
+  public async updateBoardArticleByAdmin(input: BoardArticleUpdate): Promise<BoardArticle> {
+      let { _id, articleStatus } = input;
+       
+      const result = await this.boardArticleModel
+        .findOneAndUpdate(
+          { _id: _id, articleStatus: BoardArticleStatus.ACTIVE },
+          input,
+          {new: true}
+
+        )
+        .exec();
+      if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+  
+      if (articleStatus === BoardArticleStatus.DELETE) {
+        await this.memberService.memberStatsEditor({  
+          _id: result.memberId,
+          targetKey: 'memberArticles',
+          modifier: -1,
+        });
+      }
+      return result;
+  }
+
+  public async removeBoardArticleByAdmin(articleId: ObjectId): Promise<BoardArticle> {
+      const search: T = { _id: articleId, articleStatus: BoardArticleStatus.DELETE };
+      const result = await this.boardArticleModel.findOneAndDelete(search).exec();
+      if (!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);
+      return result;
+  }
+
+
+
   //** Additional Logics **//
   public async boardArticleStatsEditor(input: StatisticModifier): Promise<BoardArticle> {
     console.log('executed');
@@ -125,5 +187,5 @@ export class BoardArticleService {
         { new: true},
       )
         .exec();
-}
+  }
 }

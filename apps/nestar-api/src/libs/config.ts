@@ -11,6 +11,9 @@ export const availableOptions = ['propertyBarter', 'propertyRent']
 export const availablePropertySorts = [
   'createdAt', 'updatedAt', 'propertyLikes', 'propertyViews', 'propertyRank', 'propertyPrice']
 
+/** Property related **/
+export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews']
+
 
 /** IMAGE CONFIGURATION  */
  export const validMimeTypes = ['image/png', 'image/jpg', 'image/jpeg'];
