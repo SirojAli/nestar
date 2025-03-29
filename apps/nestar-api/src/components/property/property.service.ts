@@ -192,6 +192,7 @@ export class PropertyService {
     return result[0];
   }
 
+  /** ADMIN **/
   public async getAllPropertiesByAdmin( input: AllPropertiesInquiry): Promise<Properties> {
     const { propertyStatus, propertyLocationList } = input.search;
     const match: T = {};
@@ -210,8 +211,7 @@ export class PropertyService {
               { $skip: (input.page - 1) * input.limit }, 
               { $limit: input.limit },    // [property1, property2]
               lookupMember,   // memberData: [memberDataValue]
-              { $unwind: '$memberData' },  // memberData: memberDataValue
-            ],
+              { $unwind: '$memberData' },],  // memberData: memberDataValue
             metaCounter: [{ $count: 'total' }],
           },
         },
@@ -233,10 +233,7 @@ export class PropertyService {
     else if (propertyStatus === PropertyStatus.DELETE) deletedAt = moment().toDate();
 
     const result = await this.propertyModel
-      .findOneAndUpdate(search, input, {
-        new: true,
-      })
-      .exec();
+      .findOneAndUpdate(search, input, {new: true}).exec();
     if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
     if (soldAt || deletedAt) {
