@@ -48,5 +48,18 @@ export class CommentResolver {
     input.search.commentRefId = shapeIntoMongoObjectId(input.search.commentRefId);
     return await this.commentService.getComments(memberId, input);
   }
-      
+
+  
+  //** ADMIN **//
+  @Roles(MemberType.ADMIN)
+  @UseGuards(RolesGuard) 
+  @Mutation((returns) => Comment)
+  public async removeCommentByAdmin(
+    @Args('commentId') input: string,
+  ): Promise <Comment> {
+    console.log('Mutation: removeCommentByAdmin');
+    const commentId = shapeIntoMongoObjectId(input);
+    return await this.commentService.removeCommentByAdmin(commentId)
+  }
+
 }
