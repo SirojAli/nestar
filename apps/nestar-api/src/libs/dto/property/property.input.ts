@@ -69,30 +69,29 @@ export class PropertyInput {
  constructedAt?: Date;
 }
 
-
 @InputType() 
 export class PricesRange {
-  @IsOptional()
   @Field(() => Int)
   start: number;
+
   @Field(() => Int)
   end: number;
 }
 
 @InputType() 
 export class SquaresRange {
-  @IsOptional()
   @Field(() => Int)
   start: number;
+
   @Field(() => Int)
   end: number;
 }
 
 @InputType() 
 export class PeriodsRange {
-  @IsOptional()
   @Field(() => Date)
   start: Date;
+
   @Field(() => Date)
   end: Date;
 }
@@ -120,7 +119,7 @@ class PISearch {
   bedsList?: Number[];
 
   @IsOptional()
-  @IsIn(availableOptions, { each:true })
+  @IsIn(availableOptions, { each: true })
   @Field(() => [String], {nullable: true})
   options?: string[];
 

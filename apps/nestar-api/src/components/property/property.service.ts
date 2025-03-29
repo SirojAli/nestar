@@ -77,17 +77,17 @@ export class PropertyService {
     const search: T = {
       _id: input._id,
       memberId: memberId,
-      propertyStatus: PropertyStatus.ACTIVE,
-    };
+      propertyStatus: PropertyStatus.ACTIVE};
 
     if (propertyStatus === PropertyStatus.SOLD) soldAt = moment().toDate();
     else if (propertyStatus === PropertyStatus.DELETE) deletedAt = moment().toDate();
 
     const result = await this.propertyModel
-      .findOneAndUpdate(search, input, {
-        new: true,
-      })
-      .exec();
+      .findOneAndUpdate(
+        search, 
+        input, 
+        {new: true}
+      ).exec();
     if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
     if (soldAt || deletedAt) {
@@ -118,13 +118,11 @@ export class PropertyService {
                 { $limit: input.limit },
                 // meLiked
                 lookupMember,
-                { $unwind: '$memberData' },  // [memberData] => memberData
-              ],
+                { $unwind: '$memberData' },],  // [memberData] => memberData (array->object)
               metaCounter: [{ $count: 'total' }],
             },
           },
-        ])
-        .exec();
+        ]).exec();
       console.log('result:', result);
       if(!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
       // console.log('Aggregation Output:', JSON.stringify(result, null, 2));
