@@ -30,7 +30,6 @@ export class Comment {
 	updatedAt: Date;
 
 	/** from aggregation **/
-
 	@Field(() => Member, { nullable: true })
 	memberData?: Member;
 }

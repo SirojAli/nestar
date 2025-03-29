@@ -34,7 +34,7 @@ export class BoardArticleResolver {
       @AuthMember('_id') memberId: ObjectId
     ): Promise<BoardArticle> {  
       console.log('Query: getBoardArticle');
-      const articleId = shapeIntoMongoObject(input);
+      const articleId = shapeIntoMongoObjectId(input);
       return await this.boardArticleService.getBoardArticle(memberId, articleId);
     }
 
@@ -45,7 +45,7 @@ export class BoardArticleResolver {
       @AuthMember('_id') memberId: ObjectId
     ): Promise<BoardArticle> { 
       console.log('Mutation: updateBoardArticle');
-      input._id = shapeIntoMongoObject(input._id);  
+      input._id = shapeIntoMongoObjectId(input._id);  
       return await this.boardArticleService.updateBoardArticle(memberId, input);
     }
 
