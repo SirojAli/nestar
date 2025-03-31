@@ -110,7 +110,7 @@ export class MemberService {
     console.log('match:', match);
 
     const result = await this.memberModel
-      .aggregate([  // 1ta array = bu pipeline deyiladi
+      .aggregate([  // 1ta array = 1ta pipeline deyiladi (bo'ladi)
         { $match: match },
         { $sort: sort }, 
         {

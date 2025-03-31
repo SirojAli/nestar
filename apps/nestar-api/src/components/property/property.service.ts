@@ -101,13 +101,17 @@ export class PropertyService {
           { $sort: sort }, 
           {
             $facet: {
+              // PipeLine 1
               list: [
                 { $skip: (input.page - 1) * input.limit }, 
                 { $limit: input.limit },
                 // meLiked
                 lookupMember,
                 { $unwind: '$memberData' },],  // [memberData] => memberData (array->object)
+              // PipeLine 2
               metaCounter: [{ $count: 'total' }],
+              // PipeLine 3
+              // test: []  ni yozish mumkin
             },
           },
         ]).exec();
@@ -253,5 +257,21 @@ export class PropertyService {
       });
     }
   }
-
 }
+
+// INPUT GA KIRITILADIGAN:
+// {
+//   "input": {
+//            PAGINATION
+//       "page": 1,
+//       "limit": 6,
+
+//            FILTER 
+//       "sort": "createdAt",
+//       "direction": "DESC",
+
+//              CATEGORY
+//       "search": {
+//       }
+//   }
+// }
