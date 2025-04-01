@@ -30,7 +30,7 @@ export class BoardArticleResolver {
     @UseGuards(WithoutGuard)
     @Query((returns) => BoardArticle)
     public async getBoardArticle(
-      @Args('boardArticleId') input: string,  
+      @Args('articleId') input: string,  
       @AuthMember('_id') memberId: ObjectId
     ): Promise<BoardArticle> {  
       console.log('Query: getBoardArticle');

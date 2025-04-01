@@ -33,7 +33,6 @@ export class Follower {
 	updatedAt: Date;
 
 	/** from aggregation **/
-
 	@Field(() => [MeLiked], { nullable: true })
 	meLiked?: MeLiked[];
 
@@ -62,7 +61,6 @@ export class Following {
 	updatedAt: Date;
 
 	/** from aggregation **/
-
 	@Field(() => [MeLiked], { nullable: true })
 	meLiked?: MeLiked[];
 
