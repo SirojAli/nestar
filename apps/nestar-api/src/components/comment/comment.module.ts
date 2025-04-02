@@ -10,12 +10,7 @@ import { BoardArticleModule } from '../board-article/board-article.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      {
-        name: 'Comment', 
-        schema: CommentSchema,
-      }
-    ]), 
+    MongooseModule.forFeature([{ name: 'Comment', schema: CommentSchema }]),
     AuthModule,
     MemberModule,
     PropertyModule,
