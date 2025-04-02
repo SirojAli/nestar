@@ -73,9 +73,7 @@ export class BoardArticleService {
         { _id: _id, memberId: memberId, articleStatus: BoardArticleStatus.ACTIVE },
         input,
         {new: true}
-
-      )
-      .exec();
+      ).exec();
     if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
     if (articleStatus === BoardArticleStatus.DELETE) {
@@ -169,8 +167,7 @@ export class BoardArticleService {
             metaCounter: [{ $count: 'total' }],
           },
         },
-      ])
-      .exec();
+      ]).exec();
     console.log('result:', result);
     if(!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
     return result[0];
@@ -185,8 +182,7 @@ export class BoardArticleService {
           input,
           {new: true}
 
-        )
-        .exec();
+        ).exec();
       if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
   
       if (articleStatus === BoardArticleStatus.DELETE) {
@@ -216,7 +212,6 @@ export class BoardArticleService {
         _id, 
         {$inc: {[targetKey]: modifier}},
         { new: true},
-      )
-        .exec();
+      ).exec();
   }
 }

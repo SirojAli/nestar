@@ -73,8 +73,7 @@ export class MemberService {
         },  // FILTER
         input,  // UPDATE
         {new: true},  // OPTION
-      )
-      .exec();
+      ).exec();
     if (!result) throw new InternalServerErrorException(Message.UPLOAD_FAILED);
 
     // MemberData ni => Token qiberyapti
@@ -136,8 +135,7 @@ export class MemberService {
             metaCounter: [{ $count: 'total' }],
           },
         },
-      ])
-      .exec();
+      ]).exec();
     console.log('result:', result);
     if(!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
     return result[0];
@@ -190,8 +188,7 @@ export class MemberService {
             metaCounter: [{ $count: 'total' }],
           }
         }
-      ])
-      .exec();
+      ]).exec();
     console.log('result:',result);
     if(!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
     return  result[0];
@@ -213,8 +210,7 @@ export class MemberService {
         _id, 
         {$inc: {[targetKey]: modifier}},
         { new: true},
-      )
-        .exec();
+      ).exec();
   }
 
 }

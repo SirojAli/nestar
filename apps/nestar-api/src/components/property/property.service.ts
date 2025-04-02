@@ -151,8 +151,7 @@ export class PropertyService {
             metaCounter: [{ $count: 'total' }],
           },
         },
-      ])
-      .exec();
+      ]).exec();
     console.log('result:', result);
     if(!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
     return result[0];
@@ -207,8 +206,7 @@ export class PropertyService {
             metaCounter: [{ $count: 'total' }],
           },
         },
-      ])
-      .exec();
+      ]).exec();
     console.log('result:', result);
     if(!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
     return result[0];
@@ -254,8 +252,7 @@ export class PropertyService {
         _id, 
         {$inc: {[targetKey]: modifier}},
         { new: true},
-      )
-        .exec();
+      ).exec();
   }
 
   private shapeMatchQuery(match: T, input: PropertiesInquiry): void {
