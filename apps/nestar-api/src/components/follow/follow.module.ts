@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from '../auth/auth.module';
-import { LikeModule } from '../like/like.module';
 import FollowSchema from '../../schemas/Follow.model';
 import { FollowResolver } from './follow.resolver';
 import { FollowService } from './follow.service';
