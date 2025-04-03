@@ -1,6 +1,8 @@
 import {ObjectId} from "bson";
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
+import { T } from "./types/common";
+import { pipeline } from "stream";
 
 /** Agent related **/
 export const availableAgentSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews', 'memberRank']
@@ -31,6 +33,45 @@ export const shapeIntoMongoObjectId =(target: any) => {
 }
 
 /** Like Process  */
+export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id') => { 
+ return {
+  $lookup: {
+    from: 'likes',
+    let: {     // bular - bizning local-variable larimiz hisoblanadi
+      localRefId: targetRefId,  // localRefId = '$_id' degani.dir
+      localMemberId: memberId,
+      localMyFavorite: true,
+    },  // + lookup da PIPELINE ni hosil qilamiz:
+    pipeline: [         // pipeline 1ta [] arrayni qab-qiladi
+      {                 // 1-match dan foy-miz: 
+        $match: {       // buyerda bir nechta narsani matching qilmoqchimiz
+          $expr: {      // ...shuni chun biz EXPRESSION dan foy-miz
+            $and: [     // bu [] array ichiga nimalarni COMPARE qilishni belgilaymiz
+              {$eq: ["$likeRefId", "$$localRefId"]},  // eq mantigi [] array ni talab etadi
+ // $likeRefId ni -> bizning $$localRefId ga solishtiradi  + biznikida 2ta $$ belgisi bo'ladi
+
+              {$eq: ["$memberId", "$$localMemberId"]}
+ // $memberId ni -> bizning $$localMemberId ga solishtiradi  + bunda ham 2ta $$ belgisi bo'ladi
+            ],
+          },
+        },
+      }, // matching-resultdan hosil bolgan mantiqni PROJECTION qilamiz
+      {  // buyerda PROJECT business mantigidan foy-miz
+        $project: {  // => MeLiked logic ni hosil qilmoqchimiz
+          _id: 0,   // id ni obermaslikni aytamiz.  ID by-default 1, qolgan datasetlar 0 boladi
+          memberId: 1,  // shuni chun bizga memberId kk
+          likeRefId: 1, 
+          myFavorite: "$$localMyFavorite"
+// bunda nega: true bolmadi? => uni orniga bizning local-var.dagi 'localMyFavorite' ni return qiladi
+        },
+      },
+    ],
+// PIPELINE hosil bolgandan kn, qanday nom bn yozilishni mantigini tashkillaymiz:    
+    as: "meLiked", // shu nom bn save b-i kk, sababi uni Properties.ts da avvaldan yozib quyganmiz
+  },
+ };
+};
+
 export const lookupMember = { 
   $lookup: {
     from: 'members',
