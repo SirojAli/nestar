@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Properties, Property } from '../../libs/dto/property/property';
 import { MemberService } from '../member/member.service';
-import { AgentPropertiesInquiry, AllPropertiesInquiry, PropertiesInquiry, PropertyInput } from '../../libs/dto/property/property.input';
+import { AgentPropertiesInquiry, AllPropertiesInquiry, OrdinaryInquiry, PropertiesInquiry, PropertyInput } from '../../libs/dto/property/property.input';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { ViewService } from '../view/view.service';
 import { StatisticModifier, T } from '../../libs/types/common';
@@ -94,7 +94,7 @@ export class PropertyService {
     return result;
   }
 
-   public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promise<Properties> {
+  public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promise<Properties> {
       const match: T = { propertyStatus: PropertyStatus.ACTIVE };
       const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
@@ -127,6 +127,12 @@ export class PropertyService {
       // console.log('Aggregation Output:', JSON.stringify(result, null, 2));
       return result[0];
   }
+
+  // For Favorite Properties
+  public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+   
+    return await this.likeService.getFavoriteProperties(memberId, input);
+}
 
   public async getAgentProperties(memberId: ObjectId, input: AgentPropertiesInquiry): Promise<Properties> {
     const { propertyStatus } = input.search;

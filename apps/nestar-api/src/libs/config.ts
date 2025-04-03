@@ -147,4 +147,15 @@ export const lookupAuthMemberFollowed = (input: LookupAuthMemberFollowed) => {
      as: "meFollowed", // shu nom bn save b-i kk, sababi uni Follow.ts da avvaldan yozib quyganmiz
    },
   };
- };
+};
+
+/** Favorite Property Complex Query Logic  */
+export const lookupFavorite = { 
+  $lookup: {
+    from: 'members',
+    localField: 'favoriteProperty.memberId',
+    foreignField: '_id',
+    as: 'favoriteProperty.memberData',
+  },
+  
+};
