@@ -11,7 +11,7 @@ import { StatisticModifier, T } from '../../libs/types/common';
 import { Follower, Followers, Following, Followings } from '../../libs/dto/follow/follow';
 import { MemberService } from '../member/member.service';
 import { FollowInquiry } from '../../libs/dto/follow/follow.input';
-import { lookupFollowerData, lookupFollowingData } from '../../libs/config';
+import { lookupAuthMemberLiked, lookupFollowerData, lookupFollowingData } from '../../libs/config';
 
 @Injectable()
 export class FollowService {
@@ -67,10 +67,12 @@ export class FollowService {
             list: [
               { $skip: (page - 1) * limit }, 
               { $limit: limit },
-              // meLiked
+              // meLiked-> qaysi following larimizga LIKE bosganimizni bilish u-n: followingId ni yozdik
+              lookupAuthMemberLiked(memberId, '$followingId'), 
               // meFollowed
               lookupFollowingData,
-              { $unwind: '$followingData' },],  
+              { $unwind: '$followingData' },
+            ],  
             metaCounter: [{ $count: 'total' }],
           },
         },
@@ -94,7 +96,8 @@ export class FollowService {
             list: [
               { $skip: (page - 1) * limit }, 
               { $limit: limit },
-              // meLiked
+              // meLiked-> qaysi follower larimizga LIKE bosganimizni bilish u-n: followerId ni yozdik
+              lookupAuthMemberLiked(memberId, '$followerId'), 
               // meFollowed
               lookupFollowerData,
               { $unwind: '$followerData' },],  

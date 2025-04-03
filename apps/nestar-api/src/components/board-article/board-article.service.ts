@@ -7,7 +7,7 @@ import { ViewService } from '../view/view.service';
 import { StatisticModifier, T } from '../../libs/types/common';
 import { ViewGroup } from '../../libs/enums/view.enum';
 import * as moment from 'moment';
-import { lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
+import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
 import { BoardArticle, BoardArticles } from '../../libs/dto/board-article/board-article';
 import { AllBoardArticlesInquiry, BoardArticleInput, BoardArticlesInquiry } from '../../libs/dto/board-article/board-article.input';
 import { BoardArticleUpdate } from '../../libs/dto/board-article/board-article.update';
@@ -106,6 +106,7 @@ export class BoardArticleService {
                 { $skip: (input.page - 1) * input.limit }, 
                 { $limit: input.limit },
                 // meLiked
+                lookupAuthMemberLiked(memberId), // '$_id' ni yozmadik, chunki by-default o'zi bor
                 lookupMember,
                 { $unwind: '$memberData' },],  
               metaCounter: [{ $count: 'total' }],
