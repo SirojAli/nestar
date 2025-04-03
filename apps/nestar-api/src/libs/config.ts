@@ -157,5 +157,14 @@ export const lookupFavorite = {
     foreignField: '_id',
     as: 'favoriteProperty.memberData',
   },
-  
 };
+
+/** Visited Property Query Logic  */
+export const lookupVisit = { 
+  $lookup: {
+    from: 'members',
+    localField: 'visitedProperty.memberId',
+    foreignField: '_id',
+    as: 'visitedProperty.memberData',
+  },
+}

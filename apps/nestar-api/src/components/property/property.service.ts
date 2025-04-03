@@ -130,9 +130,13 @@ export class PropertyService {
 
   // For Favorite Properties
   public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
-   
     return await this.likeService.getFavoriteProperties(memberId, input);
-}
+  }
+
+  // For Visited Properties
+  public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+    return await this.viewService.getVisitedProperties(memberId, input);
+  }
 
   public async getAgentProperties(memberId: ObjectId, input: AgentPropertiesInquiry): Promise<Properties> {
     const { propertyStatus } = input.search;
