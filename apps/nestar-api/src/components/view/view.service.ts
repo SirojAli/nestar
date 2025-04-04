@@ -62,7 +62,7 @@ export class ViewService {
   
         result.list = data[0].list.map( (ele) => ele.visitedProperty );
         console.log('result:', result);
-        return null;
+        return result;
       }
 }
 

@@ -11,11 +11,11 @@ import { LikeModule } from '../like/like.module';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'BoardArticle', schema: BoardArticleSchema }]), 
-        AuthModule,
-        ViewModule,
-        MemberModule,
-        LikeModule,
-      ],
+    AuthModule,
+    ViewModule,
+    MemberModule,
+    LikeModule,
+  ],
   providers: [BoardArticleResolver, BoardArticleService],
   exports: [BoardArticleService],
 })

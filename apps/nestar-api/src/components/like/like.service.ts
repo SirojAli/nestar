@@ -39,8 +39,19 @@ export class LikeService {
 
     public async checkLikeExistence(input: LikeInput): Promise<MeLiked[]> {
       const { memberId, likeRefId } = input;
-      const result = await this.likeModel.findOne({memberId: memberId, likeRefId: likeRefId}).exec();
-      return result ? [{ memberId: memberId, likeRefId: likeRefId, myFavorite: true }] : [];
+      const result = await this.likeModel
+        .findOne(
+          {
+            memberId: memberId, 
+            likeRefId: likeRefId
+          })
+          .exec();
+      return result ? [
+        { 
+          memberId: memberId, 
+          likeRefId: likeRefId, 
+          myFavorite: true 
+        }] : [];
     }
 
     // For Favorite Properties
@@ -77,8 +88,8 @@ export class LikeService {
         // console.log('data:', data);
       const result: Properties = { list: [], metaCounter: data[0].metaCounter };
 
-      result.list = data[0].list.map( (ele) => ele.favoriteProperty );
+      result.list = data[0].list.map((ele) => ele.favoriteProperty);
       console.log('result:', result);
-      return null;
+      return result;
     }
 }

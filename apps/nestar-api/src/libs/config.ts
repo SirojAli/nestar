@@ -57,7 +57,7 @@ export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id')
         },
       }, // matching-resultdan hosil bolgan mantiqni PROJECTION qilamiz
       {  // buyerda PROJECT business mantigidan foy-miz
-        $project: {  // => MeLiked logic ni hosil qilmoqchimiz
+        $project: {  // => myFavorite logic ni hosil qilmoqchimiz
           _id: 0,   // id ni obermaslikni aytamiz.  ID by-default 1, qolgan datasetlar 0 boladi
           memberId: 1,  // shuni chun bizga memberId va likeRefId lar kk
           likeRefId: 1, 

@@ -249,5 +249,4 @@ export class OrdinaryInquiry {
  @Min(1)
  @Field(() => Int)
  limit: number;
-
 }
