@@ -37,37 +37,32 @@ export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id')
  return {
   $lookup: {
     from: 'likes',
-    let: {     // bular - bizning local-variable larimiz hisoblanadi
-      localRefId: targetRefId,  // localRefId = '$_id' degani.dir
+    let: {     
+      localRefId: targetRefId,  // '$_id' 
       localMemberId: memberId,
       localMyFavorite: true,
-    },  // + lookup da PIPELINE ni hosil qilamiz:
-    pipeline: [         // pipeline 1ta [] arrayni qab-qiladi
-      {                 // 1-match dan foy-miz: 
-        $match: {       // buyerda bir nechta narsani matching qilmoqchimiz
-          $expr: {      // ...shuni chun biz EXPRESSION dan foy-miz
-            $and: [     // bu [] array ichiga nimalarni COMPARE qilishni belgilaymiz
-              {$eq: ["$likeRefId", "$$localRefId"]},  // eq mantigi [] array ni talab etadi
- // $likeRefId ni -> bizning $$localRefId ga solishtiradi  + biznikida 2ta $$ belgisi bo'ladi
-
+    },  
+    pipeline: [         
+      {                  
+        $match: {       
+          $expr: {     
+            $and: [     
+              {$eq: ["$likeRefId", "$$localRefId"]},  
               {$eq: ["$memberId", "$$localMemberId"]}
- // $memberId ni -> bizning $$localMemberId ga solishtiradi  + bunda ham 2ta $$ belgisi bo'ladi
-            ],
+             ],
           },
         },
-      }, // matching-resultdan hosil bolgan mantiqni PROJECTION qilamiz
-      {  // buyerda PROJECT business mantigidan foy-miz
-        $project: {  // => myFavorite logic ni hosil qilmoqchimiz
-          _id: 0,   // id ni obermaslikni aytamiz.  ID by-default 1, qolgan datasetlar 0 boladi
-          memberId: 1,  // shuni chun bizga memberId va likeRefId lar kk
+      }, 
+      {  
+        $project: {  
+          _id: 0,  
+          memberId: 1,  
           likeRefId: 1, 
           myFavorite: "$$localMyFavorite"
-// bunda nega: true bolmadi? => uni orniga bizning local-var.dagi 'localMyFavorite' ni return qiladi
         },
       },
     ],
-// PIPELINE hosil bolgandan kn, qanday nom bn yozilishni mantigini tashkillaymiz:    
-    as: "meLiked", // shu nom bn save b-i kk, sababi uni Properties.ts da avvaldan yozib quyganmiz
+    as: "meLiked", 
   },
  };
 };
@@ -103,48 +98,41 @@ export const lookupFollowerData = {
 
 /** Follow Complex Query Logic  */
 interface LookupAuthMemberFollowed {  
-// ikala mantiqqa ham birdek ishlashi uchun, bu interface ni yaratdik,
-// buni pastdagi lookupAuthMemberFollowed dagi input: ga qiymat qaytarish u-n yozamiz!
   followerId: T;
-  followingId: string;  // 2-qismi bizga: string ko'rinishida namoyon b-i. 
+  followingId: string;  
 
 }
 export const lookupAuthMemberFollowed = (input: LookupAuthMemberFollowed) => { 
-  const { followerId, followingId } = input; // bu ikalasini distraction qilamiz
+  const { followerId, followingId } = input; 
   return {
    $lookup: {
-     from: 'follows',  // 'follows' collectionida COMPLEX LOOKUP QUERYni amalga oshiramiz
-     let: {     // bular - bizning local-variable larimiz hisoblanadi
-       localFollowerId: followerId,   // 1-variable = followerId ga
-       localFollowingId: followingId,    // 2-variable = followingId ga => bu STRING b-i (fx: $followingId) 
+     from: 'follows',  
+     let: {     
+       localFollowerId: followerId,   
+       localFollowingId: followingId,    
        localMyFavorite: true,
-     },  // + lookup da PIPELINE ni hosil qilamiz:
-     pipeline: [         // pipeline 1ta [] arrayni qab-qiladi
-       {                 // 1-match dan foy-miz: 
-         $match: {       // buyerda bir nechta narsani MATCHING qilmoqchimiz
-           $expr: {      // ...shuni chun biz EXPRESSION dan foy-miz
-             $and: [     // bu [] array ichiga nimalarni COMPARE qilishni belgilaymiz
-               {$eq: ["$followerId", "$$localFollowerId"]},  // eq mantigi [] array ni talab etadi
-  // $followerId ni -> bizning $$localFollowerId ga solishtiradi  + biznikida 2ta $$ belgisi bo'ladi
- 
+     }, 
+     pipeline: [        
+       {                 
+         $match: {       
+           $expr: {     
+             $and: [     
+               {$eq: ["$followerId", "$$localFollowerId"]},  
                {$eq: ["$followingId", "$$localFollowingId"]}
-  // $followingId ni -> bizning $$localFollowingId ga solishtiradi  + bunda ham 2ta $$ belgisi bo'ladi
              ],
            },
          },
-       }, // matching-resultdan hosil bolgan mantiqni PROJECTION qilamiz
-       {  // buyerda PROJECT business mantigidan foy-miz
-         $project: {  // => MeLiked logic ni hosil qilmoqchimiz
-           _id: 0,   // id ni obermaslikni aytamiz.  ID by-default 1, qolgan datasetlar 0 boladi
-           followerId: 1,  // shuni chun bizga followerId va followingId lar kk
+       }, 
+       {  
+         $project: {  
+           _id: 0,   
+           followerId: 1,  
            followingId: 1, 
            myFollowing: "$$localMyFavorite"
- // bunda nega: true bolmadi? => uni orniga bizning local-var.dagi 'localMyFavorite' ni return qiladi
          },
        },
      ],
- // PIPELINE hosil bolgandan kn, qanday nom bn yozilishni mantigini tashkillaymiz:    
-     as: "meFollowed", // shu nom bn save b-i kk, sababi uni Follow.ts da avvaldan yozib quyganmiz
+     as: "meFollowed", 
    },
   };
 };

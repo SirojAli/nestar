@@ -114,17 +114,13 @@ export class PropertyService {
                 // meLiked
                 lookupAuthMemberLiked(memberId),
                 lookupMember,
-                { $unwind: '$memberData' },],  // [memberData] => memberData (array->object)
-              // PipeLine 2
+                { $unwind: '$memberData' },],  
               metaCounter: [{ $count: 'total' }],
-              // PipeLine 3
-              // test: []  ni yozish mumkin
             },
           },
         ]).exec();
       console.log('result:', result);
       if(!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-      // console.log('Aggregation Output:', JSON.stringify(result, null, 2));
       return result[0];
   }
 

@@ -106,7 +106,7 @@ export class BoardArticleService {
                 { $skip: (input.page - 1) * input.limit }, 
                 { $limit: input.limit },
                 // meLiked
-                lookupAuthMemberLiked(memberId), // '$_id' ni yozmadik, chunki by-default o'zi bor
+                lookupAuthMemberLiked(memberId), 
                 lookupMember,
                 { $unwind: '$memberData' },],  
               metaCounter: [{ $count: 'total' }],
