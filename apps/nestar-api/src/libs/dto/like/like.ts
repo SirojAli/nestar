@@ -3,7 +3,7 @@ import { LikeGroup } from '../../enums/like.enum';
 import { ObjectId } from 'mongoose';
 
 // Frontendda javob qaytaradigan 2ta Obj-type ni hosil qilganmiz
-@ObjectType()      // 1- obj-type
+@ObjectType() // 1- obj-type
 export class MeLiked {
 	@Field(() => String)
 	memberId: ObjectId;
@@ -15,7 +15,7 @@ export class MeLiked {
 	myFavorite: boolean;
 }
 
-@ObjectType()      // 2- obj-type
+@ObjectType() // 2- obj-type
 export class Like {
 	@Field(() => String)
 	_id: ObjectId;
@@ -35,5 +35,3 @@ export class Like {
 	@Field(() => Date)
 	updatedAt: Date;
 }
-
-

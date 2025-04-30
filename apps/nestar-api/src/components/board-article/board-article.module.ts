@@ -9,16 +9,14 @@ import BoardArticleSchema from '../../schemas/BoardArticle.model';
 import { LikeModule } from '../like/like.module';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: 'BoardArticle', schema: BoardArticleSchema }]), 
-    AuthModule,
-    ViewModule,
-    MemberModule,
-    LikeModule,
-  ],
-  providers: [BoardArticleResolver, BoardArticleService],
-  exports: [BoardArticleService],
+	imports: [
+		MongooseModule.forFeature([{ name: 'BoardArticle', schema: BoardArticleSchema }]),
+		AuthModule,
+		ViewModule,
+		MemberModule,
+		LikeModule,
+	],
+	providers: [BoardArticleResolver, BoardArticleService],
+	exports: [BoardArticleService],
 })
-export class BoardArticleModule {
-  
-}
+export class BoardArticleModule {}

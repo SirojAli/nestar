@@ -9,14 +9,14 @@ import { PropertyModule } from '../property/property.module';
 import { BoardArticleModule } from '../board-article/board-article.module';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: 'Comment', schema: CommentSchema }]),
-    AuthModule,
-    MemberModule,
-    PropertyModule,
-    BoardArticleModule
-  ],
-  providers: [CommentResolver, CommentService],
-  // exports: [CommentService]
+	imports: [
+		MongooseModule.forFeature([{ name: 'Comment', schema: CommentSchema }]),
+		AuthModule,
+		MemberModule,
+		PropertyModule,
+		BoardArticleModule,
+	],
+	providers: [CommentResolver, CommentService],
+	// exports: [CommentService]
 })
 export class CommentModule {}
