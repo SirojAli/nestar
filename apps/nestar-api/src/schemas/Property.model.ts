@@ -112,7 +112,5 @@ const PropertySchema = new Schema(
 );
 
 PropertySchema.index({ propertyType: 1, propertyLocation: 1, propertyTitle: 1, propertyPrice: 1 }, { unique: true });
-// MANOSI: manashu 4tasi UNIQUE bo'lishi kk, bo'lmasa VALIDATION-ERROR beradi
-// SABABI: 1xil property yaratilishini oldini oladi
-// Fx: SAM Agent 1xil nomli,lokatsiyali,title,priceli propertyni yaratmoqchi bo'lsa, QILOLMAYDI
+
 export default PropertySchema;

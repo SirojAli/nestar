@@ -14,7 +14,7 @@ interface MessagePayload {
 
 interface InfoPayload {
 	event: string;
-	totalClient: number;
+	totalClients: number;
 	memberData: Member;
 	action: string;
 }
@@ -23,7 +23,7 @@ interface InfoPayload {
 export class SocketGateway implements OnGatewayInit {
 	private logger: Logger = new Logger('SocketEventsGateway');
 	private summaryClient: number = 0;
-	private clientAuthMap = new Map<WebSocket, Member>();
+	private clientsAuthMap = new Map<WebSocket, Member>();
 	private messagesList: MessagePayload[] = [];
 
 	constructor(private authService: AuthService) {}
@@ -32,7 +32,7 @@ export class SocketGateway implements OnGatewayInit {
 	server: Server;
 
 	public afterInit(server: Server) {
-		this.logger.verbose(`WebSocket Server Initialized & Total: [${this.summaryClient}]`);
+		this.logger.verbose(`WebSocket Server Initialized & total [${this.summaryClient}]`);
 	}
 
 	private async retrieveAuth(req: any): Promise<Member> {
@@ -49,45 +49,41 @@ export class SocketGateway implements OnGatewayInit {
 	public async handleConnection(client: WebSocket, req: any) {
 		const authMember = await this.retrieveAuth(req);
 		this.summaryClient++;
-		// client => authMember || key => value
-		this.clientAuthMap.set(client, authMember);
+		this.clientsAuthMap.set(client, authMember);
 
-		// console.log('authMember: ', authMember);
 		const clientNick: string = authMember?.memberNick ?? 'Guest';
-		this.logger.verbose(`Connection [${clientNick}] & Total: [${this.summaryClient}]`);
+		this.logger.verbose(`Connection [${clientNick}] & total [${this.summaryClient}]`);
 
 		const infoMsg: InfoPayload = {
 			event: 'info',
-			totalClient: this.summaryClient,
+			totalClients: this.summaryClient,
 			memberData: authMember,
 			action: 'joined',
 		};
 		this.emitMessage(infoMsg);
-		// CLIENT MESSAGE
 		client.send(JSON.stringify({ event: 'getMessages', list: this.messagesList }));
 	}
 
 	public handleDisconnect(client: WebSocket) {
-		const authMember = this.clientAuthMap.get(client);
+		const authMember = this.clientsAuthMap.get(client);
 		this.summaryClient--;
-		this.clientAuthMap.delete(client);
+		this.clientsAuthMap.delete(client);
 
 		const clientNick: string = authMember?.memberNick ?? 'Guest';
-		this.logger.verbose(`Disconnection [${clientNick}] & Total: [${this.summaryClient}]`);
+		this.logger.verbose(`Disconnection [${clientNick}] & total [${this.summaryClient}]`);
 
 		const infoMsg: InfoPayload = {
 			event: 'info',
-			totalClient: this.summaryClient,
+			totalClients: this.summaryClient,
 			memberData: authMember,
 			action: 'left',
 		};
-		// client -> disconnected
 		this.broadcastMessage(client, infoMsg);
 	}
 
 	@SubscribeMessage('message')
 	public async handleMessage(client: WebSocket, payload: string): Promise<void> {
-		const authMember = this.clientAuthMap.get(client);
+		const authMember = this.clientsAuthMap.get(client);
 		const newMessage: MessagePayload = { event: 'message', text: payload, memberData: authMember };
 
 		const clientNick: string = authMember?.memberNick ?? 'Guest';
@@ -115,10 +111,3 @@ export class SocketGateway implements OnGatewayInit {
 		});
 	}
 }
-
-/*
-MESSAGE TARGET:
-1. CLIENT -> only client
-2. BROADCAST -> except client
-3. EMIT -> all clients
-*/

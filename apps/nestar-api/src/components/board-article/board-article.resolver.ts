@@ -43,7 +43,7 @@ export class BoardArticleResolver {
 	}
 
 	@UseGuards(AuthGuard)
-	@Mutation((returns) => BoardArticle)
+	@Mutation(() => BoardArticle)
 	public async updateBoardArticle(
 		@Args('input') input: BoardArticleUpdate,
 		@AuthMember('_id') memberId: ObjectId,
@@ -88,7 +88,7 @@ export class BoardArticleResolver {
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
-	@Mutation((returns) => BoardArticle)
+	@Mutation(() => BoardArticle)
 	public async updateBoardArticleByAdmin(
 		@Args('input') input: BoardArticleUpdate,
 		@AuthMember('_id') memberId: ObjectId,

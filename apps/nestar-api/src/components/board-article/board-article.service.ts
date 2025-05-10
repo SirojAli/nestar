@@ -184,7 +184,7 @@ export class BoardArticleService {
 	}
 
 	public async updateBoardArticleByAdmin(input: BoardArticleUpdate): Promise<BoardArticle> {
-		let { _id, articleStatus } = input;
+		const { _id, articleStatus } = input;
 
 		const result = await this.boardArticleModel
 			.findOneAndUpdate({ _id: _id, articleStatus: BoardArticleStatus.ACTIVE }, input, { new: true })

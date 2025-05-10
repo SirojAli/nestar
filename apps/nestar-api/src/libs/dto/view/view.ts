@@ -8,7 +8,7 @@ export class View {
 	_id: ObjectId;
 
 	@Field(() => ViewGroup)
-	viewGroup: ObjectId;
+	viewGroup: ViewGroup;
 
 	@Field(() => String)
 	viewRefId: ObjectId;

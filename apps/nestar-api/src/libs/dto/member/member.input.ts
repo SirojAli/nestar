@@ -45,7 +45,6 @@ export class LoginInput {
 @InputType()
 class AISearch {
 	// AI -> Agents Inquiry
-	// @IsNotEmpty()
 	@IsOptional()
 	@Field(() => String, { nullable: true })
 	text?: string;
@@ -80,14 +79,13 @@ export class AgentsInquiry {
 @InputType()
 class MISearch {
 	// MI -> Members Inquiry
+	@IsOptional()
+	@Field(() => MemberStatus, { nullable: true })
+	memberStatus?: MemberStatus;
 
 	@IsOptional()
 	@Field(() => MemberType, { nullable: true })
 	memberType?: MemberType;
-
-	@IsOptional()
-	@Field(() => MemberStatus, { nullable: true })
-	memberStatus?: MemberStatus;
 
 	@IsOptional()
 	@Field(() => String, { nullable: true })
@@ -107,7 +105,7 @@ export class MembersInquiry {
 	limit: number;
 
 	@IsOptional()
-	@IsIn([availableMemberSorts])
+	@IsIn(availableMemberSorts)
 	@Field(() => String, { nullable: true })
 	sort?: string;
 
@@ -117,5 +115,5 @@ export class MembersInquiry {
 
 	@IsNotEmpty()
 	@Field(() => MISearch)
-	search?: MISearch;
+	search: MISearch;
 }

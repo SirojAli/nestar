@@ -14,6 +14,6 @@ export class ViewInput {
 	viewRefId: ObjectId;
 
 	@IsNotEmpty()
-	@Field(() => String)
+	@Field(() => ViewGroup)
 	viewGroup: ViewGroup;
 }
